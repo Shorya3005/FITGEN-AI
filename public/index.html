@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a0c">
+  <meta name="description" content="FITGEN AI - Your personal AI fitness coach.">
+  <title>FITGEN AI | Your Personal Fitness Coach</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script type="module" src="./js/exercises-data.js"></script>
+  <script type="module" src="./js/storage.js"></script>
+  <script type="module" src="./js/api-client.js"></script>
+  <script type="module" src="./js/app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="FITGEN AI home" data-navigate="dashboard">
+        <span class="brand-mark">F</span>
+        <span class="brand-name">FITGEN <span>AI</span></span>
+      </a>
+
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="side-nav" aria-label="Main navigation">
+        <button class="nav-link is-active" type="button" data-view="dashboard"><span class="nav-icon">▦</span> Dashboard</button>
+        <button class="nav-link" type="button" data-view="generator"><span class="nav-icon">✳</span> AI Workout Generator</button>
+        <button class="nav-link" type="button" data-view="exercises"><span class="nav-icon">◈</span> Exercise Library</button>
+        <button class="nav-link" type="button" data-view="progress"><span class="nav-icon">↗</span> Goals &amp; Progress</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="streak-card">
+          <span class="streak-icon">✦</span>
+          <div><strong id="streak-value">0 day streak</strong><small>Keep showing up</small></div>
+        </div>
+        <div class="profile-row">
+          <div class="avatar">F</div>
+          <div><strong>Fitness Explorer</strong><small>Personal workspace</small></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-shell">
+      <header class="topbar">
+        <button class="icon-button mobile-menu-button" id="sidebar-toggle" type="button" aria-label="Toggle navigation">☰</button>
+        <div class="breadcrumb"><span>FITGEN AI</span><span class="breadcrumb-separator">/</span><strong id="page-title">Dashboard</strong></div>
+        <div class="topbar-right"><span class="live-dot"></span><span>YOUR FITNESS SPACE</span></div>
+      </header>
+
+      <main class="main-content" id="main-content">
+        <section class="view is-active" id="view-dashboard" data-view-panel="dashboard">
+          <div class="page-heading">
+            <div><p class="eyebrow">YOUR PERSONAL FITNESS SPACE</p><h1>Make today <span>count.</span></h1><p class="muted-copy">Small steps. Strong habits. Real progress.</p></div>
+            <button class="button button-primary" type="button" data-view="generator">＋ Build a workout</button>
+          </div>
+
+          <div class="section-heading"><div><p class="eyebrow">YOUR OVERVIEW</p><h2>Today's snapshot</h2></div><span class="sample-label">Based on your saved activity</span></div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-top"><span>Calories burned</span><span class="stat-icon">◉</span></div><strong class="stat-value" id="calories-value">0 <small>kcal</small></strong><div class="stat-foot"><span class="accent-text">Today</span><span class="muted-text">Logged workouts</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Workouts this week</span><span class="stat-icon">▦</span></div><strong class="stat-value" id="weekly-workouts-value">0</strong><div class="stat-foot"><span class="accent-text">Weekly target</span><span class="muted-text" id="weekly-target-label">0 sessions</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Active streak</span><span class="stat-icon">✦</span></div><strong class="stat-value" id="dashboard-streak-value">0 <small>days</small></strong><div class="stat-foot"><span class="accent-text">Consistency wins</span><span class="muted-text">One day at a time</span></div></article>
+            <article class="stat-card"><div class="stat-top"><span>Weight goal</span><span class="stat-icon">↗</span></div><strong class="stat-value" id="weight-goal-value">—</strong><div class="stat-foot"><span class="accent-text">Your target</span><span class="muted-text">Update in progress</span></div></article>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="panel activity-panel">
+              <div class="panel-heading"><div><p class="eyebrow">STAY CONSISTENT</p><h2>Weekly activity</h2></div><span class="panel-tag">Last 7 days</span></div>
+              <div class="activity-chart" id="weekly-activity-chart" aria-label="Weekly workout activity chart">
+                <div class="chart-placeholder">Your workout activity will appear here.</div>
+              </div>
+            </section>
+            <section class="panel quick-panel">
+              <div class="panel-heading"><div><p class="eyebrow">READY WHEN YOU ARE</p><h2>Today's workout</h2></div><span class="accent-dot"></span></div>
+              <div id="today-workout-card" class="today-workout-card"><div class="empty-icon">✳</div><h3>No workout saved yet</h3><p class="muted-copy">Generate a routine that fits your goal and schedule.</p><button class="button button-primary button-full" type="button" data-view="generator">Generate workout</button></div>
+            </section>
+          </div>
+
+          <section class="panel recent-panel">
+            <div class="panel-heading"><div><p class="eyebrow">YOUR JOURNEY</p><h2>Recent activity</h2></div><button class="text-button" type="button" data-view="progress">View progress <span>→</span></button></div>
+            <div class="table-wrap"><table><thead><tr><th>WORKOUT</th><th>DURATION</th><th>CALORIES</th><th>DATE</th></tr></thead><tbody id="recent-activity-body"><tr><td colspan="4" class="table-empty">Your completed workouts will appear here.</td></tr></tbody></table></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-generator" data-view-panel="generator" hidden>
+          <div class="page-heading"><div><p class="eyebrow">BUILT AROUND YOU</p><h1>AI workout <span>generator.</span></h1><p class="muted-copy">Choose your preferences and create a routine that fits your day.</p></div></div>
+          <div class="generator-layout">
+            <form class="panel generator-form" id="workout-form">
+              <div class="panel-heading"><div><p class="eyebrow">STEP 01</p><h2>Your workout preferences</h2></div></div>
+              <label class="field-label" for="fitness-goal">Fitness goal</label>
+              <select id="fitness-goal" name="goal" required><option value="Muscle Gain">Muscle gain</option><option value="Fat Loss">Fat loss</option><option value="Endurance">Endurance</option><option value="Flexibility">Flexibility</option><option value="General Fitness">General fitness</option></select>
+              <label class="field-label" for="muscle-group">Target area</label>
+              <select id="muscle-group" name="muscleGroup" required><option value="Full Body">Full body</option><option value="Upper Body">Upper body</option><option value="Lower Body">Lower body</option><option value="Core">Core</option></select>
+              <label class="field-label" for="equipment">Available equipment</label>
+              <select id="equipment" name="equipment" required><option value="Full Gym">Full gym</option><option value="Dumbbells Only">Dumbbells only</option><option value="Bodyweight">Bodyweight only</option></select>
+              <label class="field-label" for="experience">Experience level</label>
+              <select id="experience" name="experience" required><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option></select>
+              <label class="field-label" for="duration">Session duration</label>
+              <select id="duration" name="duration" required><option value="15">15 minutes</option><option value="30" selected>30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option></select>
+              <p class="form-note">Choose a level and duration that feel comfortable for you.</p>
+              <button class="button button-primary button-full" type="submit" id="generate-workout-button">Generate my workout <span>→</span></button>
+            </form>
+            <section class="panel generated-panel" aria-live="polite"><div class="panel-heading"><div><p class="eyebrow">STEP 02</p><h2>Your workout plan</h2></div><span class="ai-badge">✦ AI POWERED</span></div><div id="workout-result" class="workout-result"><div class="result-empty"><div class="empty-icon">✳</div><h3>Your next session starts here</h3><p class="muted-copy">Your personalized workout will appear here after generation.</p></div></div></section>
+          </div>
+        </section>
+
+        <section class="view" id="view-exercises" data-view-panel="exercises" hidden>
+          <div class="page-heading"><div><p class="eyebrow">MOVE WITH CONFIDENCE</p><h1>Exercise <span>library.</span></h1><p class="muted-copy">Explore movements, target muscles and practical form tips.</p></div></div>
+          <section class="panel library-panel">
+            <div class="library-toolbar"><label class="search-field"><span>⌕</span><input id="exercise-search" type="search" placeholder="Search exercises..." aria-label="Search exercises"></label><select id="equipment-filter" aria-label="Filter by equipment"><option value="all">All equipment</option><option value="Bodyweight">Bodyweight</option><option value="Dumbbells">Dumbbells</option><option value="Barbell">Barbell</option><option value="Machine">Machine</option></select></div>
+            <div class="filter-row" role="group" aria-label="Filter by muscle group"><button class="filter-chip is-selected" type="button" data-muscle="All">All</button><button class="filter-chip" type="button" data-muscle="Chest">Chest</button><button class="filter-chip" type="button" data-muscle="Back">Back</button><button class="filter-chip" type="button" data-muscle="Legs">Legs</button><button class="filter-chip" type="button" data-muscle="Shoulders">Shoulders</button><button class="filter-chip" type="button" data-muscle="Core">Core</button></div>
+            <div id="exercise-grid" class="exercise-grid"><div class="chart-placeholder">Exercise library is loading...</div></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-progress" data-view-panel="progress" hidden>
+          <div class="page-heading"><div><p class="eyebrow">EVERY REP COUNTS</p><h1>Goals &amp; <span>progress.</span></h1><p class="muted-copy">Set a target, log your sessions and keep moving forward.</p></div></div>
+          <div class="progress-layout">
+            <form class="panel form-panel" id="goals-form"><div class="panel-heading"><div><p class="eyebrow">YOUR TARGETS</p><h2>Fitness goals</h2></div></div>
+              <label class="field-label" for="target-weekly-workouts">Weekly workout target</label><input id="target-weekly-workouts" name="weeklyWorkouts" type="number" min="1" max="14" value="4" required>
+              <label class="field-label" for="daily-calorie-goal">Daily calorie-burn goal (kcal)</label><input id="daily-calorie-goal" name="calorieGoal" type="number" min="50" max="3000" value="300" required>
+              <label class="field-label" for="target-weight">Target weight (kg, optional)</label><input id="target-weight" name="targetWeight" type="number" min="25" max="300" step="0.1" placeholder="e.g. 70">
+              <button class="button button-primary button-full" type="submit">Save my goals</button>
+            </form>
+            <form class="panel form-panel" id="workout-log-form"><div class="panel-heading"><div><p class="eyebrow">LOG YOUR EFFORT</p><h2>Record a workout</h2></div></div>
+              <label class="field-label" for="log-workout-name">Workout name</label><input id="log-workout-name" name="workoutName" type="text" maxlength="60" placeholder="e.g. Full body session" required>
+              <label class="field-label" for="log-duration">Duration (minutes)</label><input id="log-duration" name="duration" type="number" min="1" max="300" placeholder="30" required>
+              <label class="field-label" for="log-calories">Calories burned (optional)</label><input id="log-calories" name="calories" type="number" min="0" max="3000" placeholder="150">
+              <button class="button button-primary button-full" type="submit">＋ Save workout log</button>
+            </form>
+          </div>
+          <section class="panel progress-panel"><div class="panel-heading"><div><p class="eyebrow">YOUR CONSISTENCY</p><h2>Weekly goal progress</h2></div></div><div id="goal-progress-content" class="goal-progress-content"><p class="muted-copy">Save your goals to see your progress here.</p></div></section>
+          <section class="panel recent-panel"><div class="panel-heading"><div><p class="eyebrow">KEEP THE RECORD</p><h2>Workout history</h2></div></div><div class="table-wrap"><table><thead><tr><th>WORKOUT</th><th>DURATION</th><th>CALORIES</th><th>DATE</th><th>ACTION</th></tr></thead><tbody id="progress-log-body"><tr><td colspan="5" class="table-empty">No workout logs yet. Your first entry starts here.</td></tr></tbody></table></div></section>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <button class="coach-fab" id="open-chat-button" type="button" aria-label="Open AI fitness coach"><span>✦</span><span class="fab-label">AI Coach</span></button>
+  <div class="drawer-backdrop" id="chat-backdrop" hidden></div>
+  <aside class="chat-drawer" id="chat-drawer" aria-label="FITGEN AI Coach" aria-hidden="true">
+    <div class="chat-header"><div class="coach-avatar">✦</div><div class="chat-heading"><strong>FITGEN AI Coach</strong><span><i class="live-dot"></i> Ready to help</span></div><button class="icon-button" id="close-chat-button" type="button" aria-label="Close chat">×</button></div>
+    <div class="chat-intro"><p class="eyebrow">YOUR PERSONAL COACH</p><h2>Let's get <span>stronger.</span></h2><p>Ask about workouts, exercise form or general fitness habits.</p></div>
+    <div class="chat-messages" id="chat-messages" aria-live="polite"><div class="chat-message assistant-message"><span class="message-avatar">✦</span><div class="message-bubble">Hey! I'm your FITGEN AI Coach. What fitness goal are you working towards?</div></div></div>
+    <div class="quick-prompts"><button type="button" data-chat-prompt="Suggest a balanced post-workout meal idea.">Post-workout meal</button><button type="button" data-chat-prompt="Suggest a gentle 15-minute cardio session for a beginner.">15-min cardio</button><button type="button" data-chat-prompt="Give me general tips for improving workout form safely.">Form tips</button></div>
+    <form class="chat-form" id="chat-form"><label class="sr-only" for="chat-input">Ask your fitness coach</label><textarea id="chat-input" rows="1" maxlength="1000" placeholder="Ask your fitness coach..." required></textarea><button class="send-button" type="submit" aria-label="Send message">↑</button></form>
+    <p class="chat-disclaimer">General fitness information only. Not medical advice.</p>
+  </aside>
+
+  <div class="modal-backdrop" id="exercise-modal" hidden><section class="exercise-modal" role="dialog" aria-modal="true" aria-labelledby="exercise-modal-title"><button class="icon-button modal-close" id="close-exercise-modal" type="button" aria-label="Close exercise details">×</button><div id="exercise-modal-content"></div></section></div>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>
