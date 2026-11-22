@@ -174,8 +174,21 @@
     }
     filtered.forEach(item => {
       const card = make("article", "exercise-card");
+
+const visual = make("div", "exercise-visual");
+
+if (item.image) {
+  const img = document.createElement("img");
+  img.src = item.image.startsWith("/") ? item.image : `/${item.image}`;
+  img.alt = `${item.name} exercise`;
+  img.loading = "lazy";
+  visual.append(img);
+} else {
+  visual.textContent = "✳";
+}
+
       card.append(
-        make("div", "exercise-visual", "✳"),
+        visual,
         make("h3", "", item.name),
         make("p", "exercise-meta", `${item.muscle} · ${item.equipment} · ${item.difficulty}`)
       );
